@@ -77,7 +77,7 @@ def delight_attribute(reviews_df, model):
 
 @click.command()
 @click.argument("input_json", type=click.Path(exists=True))
-@click.option("--output", default="output.csv")
+@click.option("--output", default="output.csv", help="output file name")
 def process_reviews(input_json, output):
     
     try:

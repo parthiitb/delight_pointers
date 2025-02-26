@@ -7,10 +7,14 @@ from customer reviews on product, extract sentiment and product attribute that i
 ## Setup
 
 ### Install Dependencies:
+
 pip install -r requirements.txt
+
 python -m spacy download en_core_web_sm
+
 pip install top2vec[sentence_transformers]
 
 
 ### Run Command:
-python review_analysis.py reviews.json
+
+python review_analysis.py reviews.json --output output.csv

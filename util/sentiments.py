@@ -20,35 +20,44 @@ STARS_TO_SENTIMENT = {
 
 
 def is_star_rated_review(review_text: str) -> tuple[bool, str]:
-    """ analyze if review text directly contains star rating for the product, also returns star rating """
+    """ 
+    analyze review text directly containing star ratings, also return rating 
+    """
     
     text = review_text.lower().strip()
 
-    # find if text contains a number and a word starting with st
-    match_star = re.search(r"(\d)\s*(st[a-z]*)", text, re.IGNORECASE)
+    # match text for containing a number and a word resembling star
+    # not fullproof, as it is also catching "1st" 
+
+    star_review = re.search(r"(\d)\s*(st[a-z]*)", text, re.IGNORECASE)
     
-    if match_star:
-        star_rating, star_word = match_star.groups()
-        return True, star_rating
+    if star_review:
+        rating, star_word = match_star.groups()
+        return True, rating
     
     return False, -1
 
 
 def sentiment_analysis(review_text: str) -> str:
-    """ Analyzes sentiment, considering both star ratings and text """
+    """ 
+    Analyze review sentiment, could be direct star rating or text description 
+    """
     
-    is_star_rated, rating = is_star_rated_review(review_text)       # check if text directly contains stars rating
+    is_rated, rating = is_star_rated_review(review_text)       # check if text directly contains stars rating
     
-    if is_star_rated:
-        # Separate the rating from the review text
+    if is_rated:
+        # separate the rating from the review text
+        
         text_without_rating = re.sub(r"(\d)\s*st[a-z]*", "", review_text, flags=re.IGNORECASE).strip()        
 
-        # when review contains only a rating (e.g., "5 stars"), use direct sentiment mapping
-        if not text_without_rating:        
+        # when review contains only & only rating (e.g., "5 stars"), use direct sentiment mapping
+        
+        if not text_without_rating:        # no additional text description in review
             sentiment = STARS_TO_SENTIMENT[rating]
             return sentiment
         
     score = sia.polarity_scores(review_text)
+
     sentiment = "positive" if score["compound"] > 0.05 else \
                 "negative" if score["compound"] < -0.05 else \
                 "neutral"

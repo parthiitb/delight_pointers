@@ -14,6 +14,7 @@ python -m spacy download en_core_web_sm
 
 pip install top2vec[sentence_transformers]
 
+## Run CLI
 
 ### Run Command:
 
